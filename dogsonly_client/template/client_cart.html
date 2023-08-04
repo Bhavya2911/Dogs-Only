@@ -1,0 +1,116 @@
+{% extends 'client_header.html' %}
+{% load static %}
+{% load cart_tag %}
+{% load mathfilters %}
+{% block content %}
+<!-- Start Page Title Area -->
+<div class="page-title-area">
+    <div class="container">
+        <div class="page-title-content">
+            <h1>Cart</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li>Cart</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Page Title Area -->
+
+<!-- Start Cart Area -->
+<div class="cart-area ptb-100">
+    <div class="container">
+        <form>
+            <div class="cart-table table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Remove</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if 'client_user_id' in request.session %}
+                    {% for data in cart %}
+                    <tr>
+                        <td><a href="/client/delete_cart/{{data.cart_id}}" class="remove"><i
+                                class='bx bx-trash'></i></a></td>
+                        <td class="product-thumbnail">
+                            <a href="products-details.html">
+                                <img src="{% static '/images/' %}{{data.product_id.product_image}}" alt="item">
+                                <h3>{{data.product_id.product_name}}</h3>
+                            </a>
+                        </td>
+                        <td>{{data.product_id.product_price}}/-</td>
+                        <td class="product-quantity">
+                            <div class="input-counter">
+                                <span class="minus-btn"><i class='bx bx-minus'></i></span>
+                                <input type="text" value="{{data.cart_qty}}">
+                                <span class="plus-btn"><i class='bx bx-plus'></i></span>
+                            </div>
+                        </td>
+                        <td>{{data.total_amt}}/-</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    {% for key,value in request.session.cart.items %}
+                    <tr>
+                        <td><a href="/client/delete_cart/{{value.id}}" class="remove"><i
+                                class='bx bx-trash'></i></a></td>
+                        <td class="product-thumbnail">
+                            <a href="products-details.html">
+                                <img src="{% static '/images/' %}{{value.image}}" alt="item">
+                                <h3>{{value.name}}</h3>
+                            </a>
+                        </td>
+                        <td>{{value.price}}/-</td>
+                        <td class="product-quantity">
+                            <div class="input-counter">
+                                <span class="minus-btn"><i class='bx bx-minus'></i></span>
+                                <input type="text" value="{{value.quantity}}" name="quantity">
+                                <span class="plus-btn"><i class='bx bx-plus'></i></span>
+                            </div>
+                        </td>
+                        <td>{{value.price|multiply:value.quantity}}/-</td>
+                    </tr>
+                    </tbody>
+                    {% endfor %}
+                    {% endif %}
+                </table>
+            </div>
+            <div class="cart-buttons">
+                <div class="row align-items-center">
+                    <div class="col-lg-7 col-sm-12 col-md-7">
+                        <div class="shopping-coupon-code">
+                            <input type="text" class="form-control" placeholder="Coupon code" name="coupon-code"
+                                   id="coupon-code">
+                            <button type="submit">Apply Coupon</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-sm-12 col-md-5 text-end">
+                        <a href="/client/clear_cart/" class="default-btn"><span>Clear Cart</span></a>
+                        <a href="#" class="default-btn"><span>Update Cart</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-totals">
+                <ul>
+                    <li>Subtotal <span>{{total}}</span></li>
+                    <li>Shipping <span>100</span></li>
+                    <li>Total <span>{{total|add:100}}</span></li>
+                </ul>
+                {% if 'client_user_id' in request.session %}
+                <a href="/client/checkout/" class="default-btn"><span>Proceed to Checkout</span></a>
+                {% else %}
+                <a href="/client/client_login/" class="default-btn"><span>Proceed to Checkout</span></a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+<!-- End Cart Area -->
+
+{% endblock %}

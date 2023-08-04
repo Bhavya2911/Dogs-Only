@@ -1,0 +1,95 @@
+{% extends 'client_header.html' %}
+{% load static %}
+{% load cart_tag %}
+{% load mathfilters %}
+{% block content %}
+<!-- Start Page Title Area -->
+<div class="page-title-area">
+    <div class="container">
+        <div class="page-title-content">
+            <h1>Place Order</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li>Place order</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Page Title Area -->
+
+<!-- Start Cart Area -->
+<div class="cart-area ptb-100">
+    <div class="container">
+            <div class="cart-table table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Order Status</th>
+                        <th scope="col">Total Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in order %}
+                    <tr>
+                        <td>{{data.user_id.name}}</td>
+                        <td>{{data.address}}</td>
+                        <td>{{data.contact}}</td>
+                        <td>{{data.order_date}}</td>
+                        <td style="font-size:17px">
+                            {% if data.order_status == '0' %}
+                            Pending
+                            {% elif data.order_status == '1' %}
+                            Accepted
+                            {% elif data.order_status == '2' %}
+                            Rejected
+                            {% endif %}
+                        </td>
+                        <td>{{data.total_amount}}</td>
+                        <td style="font-size:17px">
+                            {% if data.payment_status == '1' %}
+                            Cash on Delivery
+                            {% elif data.payment_status == '2'%}
+                            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr"
+                                  method="post">
+
+                                <input type="hidden" name="business"
+                                       value="bhavyapanchal2002@gmail.com">
+
+                                <!-- Specify a Buy Now button. -->
+                                <input type="hidden" name="cmd" value="_xclick">
+
+                                <!-- Specify details about the item that buyers will purchase. -->
+                                <input type="hidden" name="item_name"
+                                       value="{{request.session.client_user_id}}">
+                                <input type="hidden" name="amount" value="{{data.total_amount}}">
+                                <input type="hidden" name="currency_code" value="USD">
+
+                                <!-- Specify URLs -->
+                                <input type='hidden' name='cancel_return'
+                                       value='http://127.0.0.1:8000/movie_cancel/{{BookingID.Booking_id}}'>
+
+                                <input type='hidden' name='return'
+                                       value='http://127.0.0.1:8000/movie_success/{{BookingID.Booking_id}}'>
+
+                                <!-- Display the payment button. -->
+                                <input type="image" name="submit" border="0"
+                                       src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
+                                       alt="PayPal - The safer, easier way to pay online">
+                                <img alt="" border="0" width="1" height="1"
+                                     src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif">
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+    </div>
+</div>
+<!-- End Cart Area -->
+
+{% endblock %}

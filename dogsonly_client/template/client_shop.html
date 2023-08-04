@@ -1,0 +1,101 @@
+{% extends 'client_header.html' %}
+{% load static %}
+{% block content %}
+<!-- Start Page Title Area -->
+<div class="page-title-area">
+    <div class="container">
+        <div class="page-title-content">
+            <h1>Shop</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li>Shop</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Page Title Area -->
+
+<!-- Start Products Area -->
+<div class="products-area ptb-100">
+    <div class="container">
+        <div class="patoi-grid-sorting row align-items-center">
+            <div class="col-lg-6 col-md-6 result-count">
+                <div class="d-flex align-items-center">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#productsFilterModal" class="sidebar-filter"><i
+                            class='bx bx-filter-alt'></i> Filter</a>
+                    <p>We found <span class="count">12</span> products available for you</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 ordering">
+                <div class="select-box">
+                    <label>Sort By:</label>
+                    <select>
+                        <option>Default</option>
+                        <option>Popularity</option>
+                        <option>Latest</option>
+                        <option>Price: low to high</option>
+                        <option>Price: high to low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-left">
+            {% for p in pro %}
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-products-box">
+                    <div class="image">
+                        <a href="/client/client_shopdetails/{{p.product_id}}" class="d-block">
+                            <img src="{% static '/images/' %}{{p.product_image}}" alt="products-image">
+                        </a>
+                    </div>
+                    <div class="content">
+                        <h3><a href="/client/client_shopdetails/{{p.product_id}}">{{p.product_name}}</a></h3>
+                        <div class="price">
+                            <span class="new-price">{{p.product_price}}</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="col-lg-12 col-md-12">
+                <div class="pagination-area">
+                    <div class="nav-links">
+<!--                        <a href="shop-grid.html" class="previous page-numbers" title="Next Page"><i-->
+<!--                                class='bx bx-chevrons-left'></i></a>-->
+                        {% if pro.has_other_pages %}
+                        <ul class="pagination align-items-center">
+                            {% if pro.has_previous %}
+                            <li class="page-numbers"><a class="page-numbers" href="?page={{ pro.previous_page_number }}">&laquo;</a>
+                            </li>
+                            {% else %}
+                            <li class="page-numbers"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in pro.paginator.page_range %}
+                            {% if i.number == i %}
+                            <li class="page-numbers"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                            <li><a class="page-numbers" href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if pro.has_next %}
+                            <li><a class="page-numbers" href="?page={{ pro.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                            <li class="page-numbers"><span>&raquo;</span></li>
+                            {% endif %}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        <!--                                <span class="page-numbers current">1</span>-->
+                        <!--                                <a href="shop-grid.html" class="page-numbers">2</a>-->
+                        <!--                                <a href="shop-grid.html" class="page-numbers">3</a>-->
+<!--                        <a href="shop-grid.html" class="next page-numbers" title="Next Page"><i-->
+<!--                                class='bx bx-chevrons-right'></i></a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Products Area -->
+{% endblock %}
